@@ -17,4 +17,4 @@ def test_invalid_availability(successful_checks, total_checks):
 def test_availability_normal_case():
     result = calculate_availability(995, 1000)
 
-    assert result == 100
+    assert result == 99.5
