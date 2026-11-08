@@ -1,4 +1,3 @@
-
 def calculate_availability(
     successful_checks: int,
     total_checks: int
