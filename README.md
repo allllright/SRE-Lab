@@ -2,7 +2,7 @@
 
 A small Python/FastAPI project for learning the software development lifecycle through an SRE reliability-monitoring API.
 
-Currently, `GET /health` returns HTTP 200 with `{"status": "healthy"}`. An API test checks this contract. A separate business logic module calculates availability and validates input counts. Persistence, CI, and observability are planned learning exercises, not implemented features.
+Currently, `GET /health` returns HTTP 200 with `{"status": "healthy"}`. An API test checks this contract. A separate business logic module calculates availability and validates input counts. Persistence and observability are planned learning exercises, not implemented features.
 
 ## Run locally (Windows PowerShell)
 
@@ -23,6 +23,12 @@ Open http://127.0.0.1:8000/health or the interactive API documentation at http:/
 ```
 
 The requirements files pin direct dependencies to the versions installed for this project; transitive dependencies are not locked.
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs tests on pushes and pull requests using Ubuntu and Python 3.12. It installs `requirements-dev.txt`, which includes the application dependencies from `requirements.txt` plus pytest and HTTPX. Installing only `requirements.txt` is sufficient to run the application, but does not install the test tools.
+
+Push the workflow to GitHub to trigger the first run, then inspect the repository's Actions tab for its result. This workflow runs tests only; it does not deploy the application.
 
 ## Project files
 
