@@ -1,7 +1,4 @@
-def calculate_availability(
-    successful_checks: int,
-    total_checks: int
-) -> float:
+def calculate_availability(successful_checks: int, total_checks: int) -> float:
 
     if total_checks <= 0:
         raise ValueError("Total checks must be greater than zero")

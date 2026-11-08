@@ -2,6 +2,7 @@ import pytest
 
 from app.services.availability import calculate_availability
 
+
 @pytest.mark.parametrize(
     "successful_checks, total_checks",
     [
