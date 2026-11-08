@@ -1,0 +1,45 @@
+# Python environments and generated files
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+build/
+dist/
+*.egg-info/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+.aws/
+.ssh/
+.kube/
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+
+# Private learning notes (local only)
+/LEARNING_ROADMAP.md
+
+# Local runtime data
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
