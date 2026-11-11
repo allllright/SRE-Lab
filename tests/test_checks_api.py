@@ -1,4 +1,6 @@
 import importlib
+import logging
+import sqlite3
 
 import pytest
 from fastapi.testclient import TestClient
@@ -71,3 +73,36 @@ def test_invalid_service_name(client):
     )
 
     assert response.status_code == 422
+
+
+def test_database_write_failure(client, monkeypatch, caplog):
+    def simulate_failure(*args, **kwargs):
+        raise sqlite3.OperationalError("disk I/O error")
+
+    monkeypatch.setattr(main_module, "add_check", simulate_failure)
+
+    response = client.post(
+        "/checks",
+        json={"service": "payment-api", "success": True},
+    )
+
+    assert response.status_code == 503
+    assert response.json() == {"detail": "Database temporarily unavailable"}
+    assert (
+        "app.main",
+        logging.ERROR,
+        "Database operation failed: path=/checks",
+    ) in caplog.record_tuples
+    assert "sqlite3.OperationalError: disk I/O error" in caplog.text
+
+
+def test_database_read_failure(client, monkeypatch):
+    def simulate_failure(*args, **kwargs):
+        raise sqlite3.OperationalError("database is locked")
+
+    monkeypatch.setattr(main_module, "get_check_counts", simulate_failure)
+
+    response = client.get("/services/payment-api/availability")
+
+    assert response.status_code == 503
+    assert response.json() == {"detail": "Database temporarily unavailable"}

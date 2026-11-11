@@ -1,8 +1,11 @@
+import logging
+import sqlite3
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, StringConstraints
 
 from app.db import add_check, get_check_counts, init_db
@@ -32,6 +35,23 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+logger = logging.getLogger(__name__)
+
+
+@app.exception_handler(sqlite3.OperationalError)
+async def database_error_handler(
+    request: Request,
+    exc: sqlite3.OperationalError,
+) -> JSONResponse:
+    logger.error(
+        "Database operation failed: path=%s",
+        request.url.path,
+        exc_info=(type(exc), exc, exc.__traceback__),
+    )
+    return JSONResponse(
+        status_code=503,
+        content={"detail": "Database temporarily unavailable"},
+    )
 
 
 @app.get("/health")
